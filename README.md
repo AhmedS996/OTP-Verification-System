@@ -1,4 +1,5 @@
 #OTP Verification System
+
 This is a simple OTP (One-Time Password) verification system built using PHP and MySQL. The system allows users to sign up with their email address and receive an OTP code via email, which they can then use to verify their account.
 
 Features
