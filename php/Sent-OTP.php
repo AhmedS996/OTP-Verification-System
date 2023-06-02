@@ -23,12 +23,12 @@ $mail = new PHPMailer(true); // Create a new PHPMailer object
 $mail->isSMTP(); // Set the mailer to use SMTP
 $mail->Host = 'smtp.gmail.com'; // Specify the SMTP server
 $mail->SMTPAuth = true; // Enable SMTP authentication
-$mail->Username = 'cms.uhb@gmail.com'; // SMTP username (website email)
-$mail->Password = 'oxyzvegixyvopdlh'; // SMTP password (app password)
+$mail->Username = 'XXXXX@gmail.com'; // SMTP username (website email)
+$mail->Password = 'XXXXX'; // SMTP password (app password)
 $mail->SMTPSecure = 'ssl'; // Enable TLS encryption, `ssl` also accepted
 $mail->Port = 465; // TCP port to connect to
 
-$mail->setFrom('cms.uhb@gmail.com'); // Set the sender's email address
+$mail->setFrom('XXXXX@gmail.com'); // Set the sender's email address
 
 $mail->addAddress($email); // Add a recipient
 
