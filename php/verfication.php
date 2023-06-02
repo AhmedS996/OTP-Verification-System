@@ -1,10 +1,11 @@
 <?php 
-session_start();
-require 'Connection.php';
+session_start(); // Start a new session or resume an existing session
+require 'Connection.php'; // Include the database connection code
 
-if(empty($_SESSION['v'])){ 
+if(empty($_SESSION['v'])){ // If the user hasn't received an OTP yet, redirect to the login page
     header("Location: ../login.php");
-   }
+}
+
 ?>
 
 <html>
@@ -30,43 +31,42 @@ if(empty($_SESSION['v'])){
             </form>
                 <?php
                   
-              
-                  $Emailing = $_SESSION['Email']; // get the cline email
-                  $Enter_Code = isset($_POST['Code']) ? $_POST['Code'] : '';
+                  $Emailing = $_SESSION['Email']; // Get the client email from the session variable
+                  $Enter_Code = isset($_POST['Code']) ? $_POST['Code'] : ''; // Get the verification code entered by the user
                   
-                  if (isset($_POST['submit'])) {
-                      $check = "SELECT * FROM `otp` WHERE email = '$Emailing'";
+                  if (isset($_POST['submit'])) { // If the form has been submitted
+                      $check = "SELECT * FROM `otp` WHERE email = '$Emailing'"; // Check if the email is in the OTP table
                       $query = mysqli_query($conn, $check);
-                      $code = mysqli_fetch_row($query);
+                      $code = mysqli_fetch_row($query); // Get the OTP code from the table
               
-                      $dquery = "DELETE FROM `otp` WHERE email = '$Emailing'";
+                      $dquery = "DELETE FROM `otp` WHERE email = '$Emailing'"; // Delete the OTP from the table
                       
-                      if ($Enter_Code == $code[1]) {
-                          $_SESSION['Email'] = $Emailing;
+                      if ($Enter_Code == $code[1]) { // If the verification code matches the OTP
+                          $_SESSION['Email'] = $Emailing; // Store the email in a session variable
                                           
-                          if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `student` WHERE email = '$Emailing'")) > 0) { // if there is same email in database  (an old user)
-                              mysqli_query($conn, $dquery);
-                              $_SESSION['id']=$_SESSION['Email'];
-                              header("Location: ../index.php");
+                          if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `student` WHERE email = '$Emailing'")) > 0) { // If the email is in the "student" table
+                              mysqli_query($conn, $dquery); // Delete the OTP from the table
+                              $_SESSION['id']=$_SESSION['Email']; // Set a session variable with the email
+                              header("Location: ../index.php"); // Redirect the user to the homepage
                           } else {
-                              mysqli_query($conn, $dquery);
-                              // send user to info.php
+                              mysqli_query($conn, $dquery); // Delete the OTP from the table
+                              // Send the user to the "info.php" page to enter their information
                               header("Location: info.php");
                           }
-                      } else {
+                      } else { // If the verification code does not match the OTP
                           if (!isset($_SESSION['attemptCount'])) {
                               $_SESSION['attemptCount'] = 1;
                           } else {
                               $_SESSION['attemptCount']++;
                           }
-                          if ($_SESSION['attemptCount'] >= 3) {
+                          if ($_SESSION['attemptCount'] >= 3) { // If the user has entered an incorrect code 3 times
                               ?>
                               <script>
-                                alert("we sent you other OTP");
-                                window.location.href = "InsertOTP.php";
+                                alert("we sent you other OTP"); // Send a message to the user
+                                window.location.href = "InsertOTP.php"; // Redirect the user to the "InsertOTP.php" page to receive a new OTP
                               </script>
                               <?php
-                              unset($_SESSION['attemptCount']);
+                              unset($_SESSION['attemptCount']); // Reset the attempt count
                           } else {
                               ?>
                               <span class="OTPAlert">
@@ -78,11 +78,8 @@ if(empty($_SESSION['v'])){
                       }
                   }
               ?>
-
-               
-               
         </div>
-        
+    </div>
     </section>
     <script src="JS/Wrong_OTP.js"></script>
     <script src="../JS/Timer.js"></script>
