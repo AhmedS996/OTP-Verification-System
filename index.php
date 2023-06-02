@@ -21,6 +21,6 @@ if(empty($_SESSION['id'])){
     <p>Your First name:<?php echo "{$_SESSION['Fname']}";?></p>
     <p>Your Last name:<?php echo "{$_SESSION['Lname']}";?></p>
     
-    <p><a class="logout-a" href="logout.php">logout</a></p>
+    <p><a class="logout-a" href="php/logout.php">logout</a></p>
 </body>
 </html>
