@@ -1,1 +1,0 @@
-Here is the img for how the website work.
