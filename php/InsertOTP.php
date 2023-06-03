@@ -1,18 +1,24 @@
 <?php 
-session_start(); // Start a new session or resume an existing session
-require 'Connection.php'; // Include the database connection code
+session_start();
 
-    $Email = $_SESSION['Email']; // Get the email from the session variable
+require 'Connection.php';
 
-    $dquery = "DELETE FROM `otp` WHERE email = '$Email'"; // Delete any existing OTP for the email from the database
+$email = $_SESSION['Email'];
 
-    mysqli_query($conn,$dquery); // Execute the delete query
-    $passcode= rand(100000, 999999);// Generate a random 6-digit OTP
+// Delete any existing OTP for the email from the database
+$delete_query = "DELETE FROM `otp` WHERE email = '$email'";
+mysqli_query($conn, $delete_query);
 
-    // Insert the email and OTP into the database for verification
-    $Insert_otp = "INSERT INTO `otp` (`passcode`,`email`) VALUES ('$passcode','$Email')";                                      
-    $query = mysqli_query($conn,$Insert_otp);
+// Generate a random 6-digit OTP
+$otp = rand(100000, 999999);
 
-    $_SESSION['v']=1; // Set a session variable to indicate that the OTP has been sent
-    header("Location: Sent-OTP.php"); // Redirect the user to the "Sent-OTP.php" page
+// Insert the email and OTP into the database for verification
+$insert_query = "INSERT INTO `otp` (`passcode`, `email`) VALUES ('$otp', '$email')";
+mysqli_query($conn, $insert_query);
+
+// Set a session variable to indicate that the OTP has been sent
+$_SESSION['v'] = 1;
+
+// Redirect the user to the "Sent-OTP.php" page
+header('Location: Sent-OTP.php');
 ?>

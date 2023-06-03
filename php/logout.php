@@ -1,9 +1,9 @@
 <?php 
-
 session_start();
 
-unset($_SESSION['id']);
-unset($_SESSION['v']);
-unset($_SESSION['info_access']);
-header("Location: ../login.php");
+// Unset the session variables you want to clear
+unset($_SESSION['id'], $_SESSION['v'], $_SESSION['info_access']);
+
+// Redirect the user to the login page
+header('Location: ../login.php');
 ?>

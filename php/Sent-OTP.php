@@ -1,43 +1,50 @@
 <?php 
-session_start(); // Start a new session or resume an existing session
-include 'Connection.php'; // Include the database connection code
+// Start a new session or resume an existing session
+session_start();
 
-use PHPMailer\PHPMailer\PHPMailer; // Import the PHPMailer library
+// Include the database connection code and the PHPMailer library
+require 'Connection.php';
+require '../PHPMailer-master/src/Exception.php';
+require '../PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer-master/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../PHPMailer-master/src/Exception.php'; // Include the PHPMailer Exception class
-require '../PHPMailer-master/src/PHPMailer.php'; // Include the PHPMailer class
-require '../PHPMailer-master/src/SMTP.php'; // Include the SMTP class
+// Get the client email from the session variable to send the OTP code
+$email = $_SESSION['Email'];
 
-$email = $_SESSION['Email']; // Get the client email from the session variable to send the OTP code
+// Search the database for the OTP code corresponding to the client's email
+$search_query = "SELECT * FROM `otp` WHERE Email = '$email'";
+$search_result = mysqli_query($conn, $search_query);
+$otp_row = mysqli_fetch_assoc($search_result);
+$otp = $otp_row['code'];
 
-// Get the OTP code from the database
-$search = "SELECT * FROM `otp` WHERE Email = '$email'";
-$find = mysqli_query($conn,$search);
-$The_code_row = mysqli_fetch_row($find);
+try {
+  // Create a new PHPMailer object and configure it to use SMTP
+  $mail = new PHPMailer(true);
+  $mail->isSMTP();
+  $mail->Host = 'smtp.gmail.com';
+  $mail->SMTPAuth = true;
+  $mail->Username = 'your-email@gmail.com'; // Replace with your email address
+  $mail->Password = 'your-email-password'; // Replace with your email password or app password
+  $mail->SMTPSecure = 'ssl';
+  $mail->Port = 465;
+  
+  // Set the sender and recipient email addresses, email format, subject, and body
+  $mail->setFrom('your-email@gmail.com'); // Replace with your email address
+  $mail->addAddress($email);
+  $mail->isHTML(true);
+  $mail->Subject = 'The OTP Code';
+  $mail->Body = "Your OTP code is {$otp}.";
 
-$The_Code = $The_code_row[1]; // Get the OTP code from the database row
+  // Send the email
+  $mail->send();
+} catch (Exception $e) {
+  // Handle any exceptions that might occur while sending the email
+  echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+}
 
-$mail = new PHPMailer(true); // Create a new PHPMailer object
-
-$mail->isSMTP(); // Set the mailer to use SMTP
-$mail->Host = 'smtp.gmail.com'; // Specify the SMTP server
-$mail->SMTPAuth = true; // Enable SMTP authentication
-$mail->Username = 'XXXXX@gmail.com'; // SMTP username (website email)
-$mail->Password = 'XXXXX'; // SMTP password (app password)
-$mail->SMTPSecure = 'ssl'; // Enable TLS encryption, `ssl` also accepted
-$mail->Port = 465; // TCP port to connect to
-
-$mail->setFrom('XXXXX@gmail.com'); // Set the sender's email address
-
-$mail->addAddress($email); // Add a recipient
-
-$mail->isHTML(true); // Set email format to HTML
-
-$mail->Subject = "The OTP CODE"; // Set the subject of the email
-$mail->Body = "your code is {$The_Code}"; // Set the body of the email
-
-$mail->send(); // Send the email
-
-header("Location: verfication.php"); // Redirect the user back to the verification page
+// Redirect the user back to the verification page after sending the email
+header('Location: verfication.php');
 ?>

@@ -1,16 +1,15 @@
-<!-- 
-    
-when timer finish delete the row of the user to restart again 
-
--->
 <?php 
 session_start();
 require 'Connection.php';
 
-$Emailing = $_SESSION['Email'];
-$dquery = "DELETE FROM `otp` WHERE email = '$Emailing'";
+// Get the user's email from the session variable
+$email = $_SESSION['Email'];
 
-mysqli_query($conn,$dquery);
+// Delete the row with the user's email from the `otp` table in the database
+$delete_query = "DELETE FROM `otp` WHERE email = '$email'";
+mysqli_query($conn, $delete_query);
 
-header("Location: ../login.php");
+// Redirect the user to the login page
+header('Location: ../login.php');
+exit(); // exit the script after redirecting to prevent further execution
 ?>

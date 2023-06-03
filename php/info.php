@@ -1,10 +1,36 @@
 <?php 
-session_start(); // Start a new session or resume an existing session
-require 'Connection.php'; // Include the database connection code
-if(empty($_SESSION['info_access'])){ // If the user hasn't received an OTP yet, redirect to the login page
-    header("Location: ../login.php");
+session_start();
+
+require 'Connection.php';
+
+// If the user hasn't received an OTP yet, redirect to the login page
+if (!isset($_SESSION['info_access'])) {
+  header('Location: ../login.php');
+  exit();
+}
+
+if (isset($_POST['submit'])) {
+  // Get the user's email and name from the session and form input
+  $email = $_SESSION['Email'];
+  $fname = $_POST['Fname'];
+  $lname = $_POST['Lname'];
+
+  // Insert new client data into the database
+  $insert_query = "INSERT INTO `student` (`Email`, `FirstName`, `LastName`) 
+                   VALUES ('$email', '$fname', '$lname')";
+  mysqli_query($conn, $insert_query);
+
+  // Set session variables for the user's name and email
+  $_SESSION['Fname'] = $fname;
+  $_SESSION['Lname'] = $lname;
+  $_SESSION['id'] = $email;
+
+  // Redirect the user to the "index.php" page
+  header('Location: ../index.php');
+  exit();
 }
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -14,35 +40,20 @@ if(empty($_SESSION['info_access'])){ // If the user hasn't received an OTP yet, 
   <link rel="stylesheet" href="../style/info.css">
 </head>
 <body>
-    <section class="secLogin">
-        <div class="cont">
-            <div class="form sign-in">
-                <form action="info.php" method="post">
-                    <h2>First time here?</h2>
-                    <label>
-                        <span>Please provide us your name</span>
-                        <input tabindex="1" type="text" name="Fname" placeholder="First Name" maxlength="22" required>
-                        <input tabindex="2" type="text" name="Lname" placeholder="Last Name" maxlength="22" required>
-                    </label>
-                    <?php
-                        if(isset($_POST['submit']) && $_POST['Fname'] && $_POST['Lname']){
-                            $id = 0;
-                            $Email = $_SESSION['Email'];
-                            $_SESSION['Fname'] = $Fname = $_POST['Fname'];
-                            $_SESSION['Lname'] = $Lname = $_POST['Lname'];
-                            // Insert new client data into the database
-                            $sqling = "INSERT INTO `student` (`Email`, `FirstName`, `LastName`) 
-                                        VALUES ('$Email', '$Fname', '$Lname')";
-                            $query = mysqli_query($conn,$sqling);
-                            // Send the user to the "index.php" page
-                            $_SESSION['id']=$_SESSION['Email'];
-                            header("Location: ../index.php");
-                        }
-                    ?>
-                    <button tabindex="3" type="submit" class="submit" name="submit">Submit</button>
-                </form>
-            </div>
-        </div>
-    </section>
+  <section class="secLogin">
+    <div class="cont">
+      <div class="form sign-in">
+        <form action="info.php" method="post">
+          <h2>First time here?</h2>
+          <label>
+            <span>Please provide us your name</span>
+            <input tabindex="1" type="text" name="Fname" placeholder="First Name" maxlength="22" required>
+            <input tabindex="2" type="text" name="Lname" placeholder="Last Name" maxlength="22" required>
+          </label>
+          <button tabindex="3" type="submit" class="submit" name="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
