@@ -10,8 +10,11 @@ if(empty($_SESSION['v'])){ // If the user hasn't received an OTP yet, redirect t
 
 <html>
 <head>
-<title>Verfication</title>
-        <script src="../JS/Wrong_OTP.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification</title>
+  <link rel="stylesheet" href="../style/verfication.css">
 </head>
 <body>
     <section class="secLogin">
