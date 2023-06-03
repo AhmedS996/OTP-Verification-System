@@ -1,6 +1,6 @@
 # OTP Verification System
 
-This is a simple OTP (One-Time Password) verification system built using PHP and MySQL. The system allows users to sign up with their email address and receive an OTP code via email, which they can then use to verify their account.
+This is a simple OTP (Without passowrd) verification system built using PHP and MySQL. The system allows users to sign up with their email address and receive an OTP code via email, which they can then use to verify their account.
 
 ## Features
 
@@ -20,9 +20,9 @@ This is a simple OTP (One-Time Password) verification system built using PHP and
 
 1. Clone the project repository to your local machine:
 
-   ````
-   git clone https://github.com/AhmedS996/OTP.git
-   ```
+```
+   git clone https://github.com/AhmedS996/OTP-Verification-System.git
+```
 
 2. Create a new MySQL database and import the `otp.sql` file from the project's `database` folder.
 
@@ -51,7 +51,7 @@ This is a simple OTP (One-Time Password) verification system built using PHP and
 
 ## Usage
 
-1. Sign up with your email address and provide your name.
+1. Sign up with your email address.
 
 2. Check your email inbox for the OTP code.
 
@@ -59,7 +59,7 @@ This is a simple OTP (One-Time Password) verification system built using PHP and
 
 4. If the OTP code is correct, your account will be activated and you will be redirected to the dashboard page.
 
-5. Login to your account using your email address and password.
+5. Login to your account using your email address.
 
 6. View your account information on the dashboard page.
 
