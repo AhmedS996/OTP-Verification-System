@@ -54,6 +54,7 @@ if(empty($_SESSION['v'])){ // If the user hasn't received an OTP yet, redirect t
                           } else {
                               mysqli_query($conn, $dquery); // Delete the OTP from the table
                               // Send the user to the "info.php" page to enter their information
+                              $_SESSION['info_access']=2;
                               header("Location: info.php");
                           }
                       } else { // If the verification code does not match the OTP

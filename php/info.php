@@ -1,6 +1,9 @@
 <?php 
 session_start(); // Start a new session or resume an existing session
 require 'Connection.php'; // Include the database connection code
+if(empty($_SESSION['info_access'])){ // If the user hasn't received an OTP yet, redirect to the login page
+    header("Location: ../login.php");
+}
 ?>
 <html>
 <head>
